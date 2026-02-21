@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+data/
+saved_models/
+*.pth
+.DS_Store
+venv/
+env/
+ai_work/
+flower_env/
