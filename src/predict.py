@@ -1,4 +1,5 @@
 import torch
+import torch.nn.functional as F
 from torchvision import transforms
 from PIL import Image
 
@@ -28,10 +29,17 @@ def predict(image_path, class_names):
 
     with torch.no_grad():
         outputs = model(image)
-        _, pred = torch.max(outputs, 1)
 
-    print(f"Prediction: {class_names[pred.item()]}")
+        probs=F.softmax(outputs,dim=1)
+        confidence,pred=torch.max(probs,1)
+        confidence=confidence.item()
+        pred_class=class_names[pred.item()]
+    threshold=0.9
+    if confidence<threshold:
+        print(f"Prediction : unknown (Confidence:{confidence:.2f})")
+    else:
+        print(f"Prediction:{pred_class}(Confidence:{confidence:.2f})")
 
 class_names=['daisy', 'dandelion']
-img_path="/Users/bimalkumal/Downloads/flower/train/dandelion/10683189_bd6e371b97_jpg.rf.213ffbff3870cabf5f0701a25c8a1b57.jpg"
+img_path='/Users/bimalkumal/Desktop/Daisy_flower.jpg'
 predict(img_path,class_names)
